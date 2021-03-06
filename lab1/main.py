@@ -71,12 +71,6 @@ def draw_cube(object, color=OBJECT_COLOR):
     pygame.draw.circle(screen, (255, 0, 0), object[-1, :2], 5)
 
 
-def draw_pyramid(object, color=OBJECT_COLOR):
-    draw_square(*[object[i, :2] for i in range(4)])
-    for p in object[:4, :2]:
-        pygame.draw.line(screen, color, object[-1, :2], p)
-
-
 def draw_text():
     str = [
         f'α = {angles["x"] / np.pi * FPS: .2f}π / s (x-axis)', 
@@ -91,8 +85,6 @@ def draw_text():
 
 projected_cube = project_isometric(cube)
 projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0, 0])
-# projected_pyramid = project_isometric(pyramid)
-# projected_pyramid = translate(projected_pyramid, [HALF_WIDTH, HALF_HEIGHT, 0, 0])
 # Main loop
 while True:
     # Event handling
