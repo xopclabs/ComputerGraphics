@@ -84,7 +84,7 @@ def draw_text():
 
 
 projected_cube = project_isometric(cube)
-projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0, 0])
+projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0])
 # Main loop
 while True:
     # Event handling
@@ -134,7 +134,7 @@ while True:
     if rotating:
         cube = rotate(cube, 'xyz', (sign * angles['x'], sign * angles['y'], sign * angles['z']))
         projected_cube = project_isometric(cube)
-        projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0, 0])
+        projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0])
 
     # Clear screen
     fill_background()
