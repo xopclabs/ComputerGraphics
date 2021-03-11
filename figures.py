@@ -26,33 +26,33 @@ class Object():
         return obj 
 
 
-    def rotateX(self, angle, copy=False, with_normals=True):
+    def rotateX(self, angle, around=None, copy=False):
         obj = deepcopy(self) if copy else self
-        obj.polygons = rotateX(obj.polygons, angle)
-        obj.center = rotateX(obj.center, angle)
-        if with_normals:
-            obj.normals = rotateX(obj.normals, angle)
-            obj.normals = normalize(obj.normals)
+        if around == 'center':
+            obj.polygons = rotateX(obj.polygons, angle, around=self.center[:3])
+        else:
+            obj.polygons = rotateX(obj.polygons, angle)
+            obj.center = rotateX(obj.center, angle)
         return obj 
     
 
-    def rotateY(self, angle, copy=False, with_normals=True):
+    def rotateY(self, angle, around=None, copy=False):
         obj = deepcopy(self) if copy else self
-        obj.polygons = rotateY(obj.polygons, angle)
-        obj.center = rotateY(obj.center, angle)
-        if with_normals:
-            obj.normals = rotateY(obj.normals, angle)
-            obj.normals = normalize(obj.normals)
+        if around == 'center':
+            obj.polygons = rotateY(obj.polygons, angle, around=self.center[:3])
+        else:
+            obj.polygons = rotateY(obj.polygons, angle)
+            obj.center = rotateY(obj.center, angle)
         return obj 
     
 
-    def rotateZ(self, angle, copy=False, with_normals=True):
+    def rotateZ(self, angle, around=None, copy=False):
         obj = deepcopy(self) if copy else self
-        obj.polygons = rotateZ(obj.polygons, angle)
-        obj.center = rotateZ(obj.center, angle)
-        if with_normals:
-            obj.normals = rotateZ(obj.normals, angle)
-            obj.normals = normalize(obj.normals)
+        if around == 'center':
+            obj.polygons = rotateZ(obj.polygons, angle, around=self.center[:3])
+        else:
+            obj.polygons = rotateZ(obj.polygons, angle)
+            obj.center = rotateZ(obj.center, angle)
         return obj 
 
 

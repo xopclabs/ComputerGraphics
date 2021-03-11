@@ -2,17 +2,13 @@ import numpy as np
 import pygame
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from figures import *
+from math3D import *
 
 # Global settings
 # Screen stuff
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 HALF_WIDTH = SCREEN_WIDTH // 2
 HALF_HEIGHT = SCREEN_HEIGHT // 2
-AR = SCREEN_WIDTH / SCREEN_HEIGHT
-FOV = 75
-FAR = 1000
-NEAR = 0.1
 # Colors
 BG_COLOR = (0, 0, 0)
 OBJECT_COLOR = (255, 255, 255)
@@ -21,7 +17,7 @@ FPS = 60
 ANGLE_FACTOR = 100
 mode = 'x'
 rotating = False
-sign = 1
+side = 1
 
 # pygame initialization
 pygame.init()
@@ -34,22 +30,45 @@ pygame.display.set_caption('[1.3] Leyba Rusakov Urban')
 # Font for text rendering
 font = pygame.font.SysFont('Courier New', 15)
 
-
-# Object declaration
-OFFSET = 5
-object = Box([0, 0, 0], (1, 1, 1))
-projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
-# object = Object(obj_to_coords('test\\models\\cat.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
-# projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
+# Object and rotation point declaration
+A = 200
+HF_A = A / 2
+cube = np.array([
+        [-HF_A, HF_A, HF_A, 1], 
+        [-HF_A, -HF_A, HF_A, 1], 
+        [HF_A, -HF_A, HF_A, 1], 
+        [HF_A, HF_A, HF_A, 1], 
+        [-HF_A, HF_A, -HF_A, 1], 
+        [-HF_A, -HF_A, -HF_A, 1], 
+        [HF_A, -HF_A, -HF_A, 1], 
+        [HF_A, HF_A, -HF_A, 1], 
+    ])
+projected_cube = None
 # Rotation angle (rad)
 alpha = -np.pi / 60
 beta = np.pi / 100
-gamma = -np.pi / 120
+gamma = -np.pi / 60
 angles = dict(zip('xyz', [alpha, beta, gamma]))
 
 
 def fill_background():
     screen.fill(BG_COLOR)
+
+
+def draw_square(a, b, c, d, color=OBJECT_COLOR):
+    pygame.draw.line(screen, color, a, b)
+    pygame.draw.line(screen, color, b, c)
+    pygame.draw.line(screen, color, c, d)
+    pygame.draw.line(screen, color, d, a)
+
+
+def draw_cube(object, color=OBJECT_COLOR):
+    draw_square(*[object[i, :2] for i in range(4)])
+    draw_square(*[object[i, :2] for i in range(4, 8)])
+    draw_square(object[0, :2], object[4, :2], object[5, :2], object[1, :2])
+    draw_square(object[2, :2], object[6, :2], object[7, :2], object[3, :2])
+    pygame.draw.circle(screen, (255, 0, 0), object[1, :2], 5)
+    pygame.draw.circle(screen, (255, 0, 0), object[-1, :2], 5)
 
 
 def draw_text():
@@ -64,6 +83,8 @@ def draw_text():
         screen.blit(text_surface, (5, i * 14 + 1))
 
 
+projected_cube = project_isometric(cube)
+projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0])
 # Main loop
 while True:
     # Event handling
@@ -82,10 +103,6 @@ while True:
                 mode = 'z'
             if event.key == pygame.K_r:
                 angles[mode] = 0
-            if event.key == pygame.K_e:
-                print(object.normals, end='\n\n')
-            if event.key == pygame.K_u:
-                print(object.polygons, end='\n\n')
         # On mouse scroll, change angle
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Mouse Wheel Up
@@ -115,18 +132,17 @@ while True:
                 sign = -1
 
     if rotating:
-        object = object.rotateX(sign * angles['x']).rotateY(sign * angles['y']).rotateZ(sign * angles['z'])
-        projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
+        cube = rotate(cube, 'xyz', (sign * angles['x'], sign * angles['y'], sign * angles['z']))
+        projected_cube = project_isometric(cube)
+        projected_cube = translate(projected_cube, [HALF_WIDTH, HALF_HEIGHT, 0])
 
     # Clear screen
     fill_background()
     # Draw geometry
-    projected_object.prepare(screen, copy=True).draw(screen)
-    # projected_object.prepare(screen, copy=True).translate([0, HALF_HEIGHT / 2, 0]).draw(screen)
+    draw_cube(projected_cube)
     draw_text()
+
 
     # Update screen
     pygame.display.update()
     dt = clock.tick(60)
-
-    
