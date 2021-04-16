@@ -13,6 +13,7 @@ HALF_HEIGHT = SCREEN_HEIGHT // 2
 # Colors
 BG_COLOR = (0, 0, 0)
 OBJECT_COLOR = (255, 255, 255)
+BOX_COLOR = (100, 100, 100)
 # Interface
 FPS = 60
 
@@ -71,11 +72,19 @@ def draw_polygon():
     pygame.draw.line(screen, OBJECT_COLOR, polygon[0], polygon[-1])
 
 
+def draw_rect():
+    pygame.draw.line(screen, BOX_COLOR, [rect_x1, rect_y1], [rect_x1, rect_y2])
+    pygame.draw.line(screen, BOX_COLOR, [rect_x1, rect_y2], [rect_x2, rect_y2])
+    pygame.draw.line(screen, BOX_COLOR, [rect_x2, rect_y2], [rect_x2, rect_y1])
+    pygame.draw.line(screen, BOX_COLOR, [rect_x2, rect_y1], [rect_x1, rect_y1])
+
 def fill_background():
     screen.fill(BG_COLOR)
 
 
 polygon = generate_polygon()
+rect_x1, rect_y1, rect_x2, rect_y2 = 0, 0, 0, 0
+moving = False
 # Main loop
 while True:
     # Event handling
@@ -87,11 +96,20 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 polygon = generate_polygon()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            rect_x1, rect_y1 = pygame.mouse.get_pos()
+            moving = True
+        if event.type == pygame.MOUSEMOTION:
+            if moving:
+                rect_x2, rect_y2 = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONUP:
+            moving = False
 
     # Clear screen
     fill_background()
     # Draw geometry
     draw_polygon()
+    draw_rect()
 
     # Update screen
     pygame.display.update()
