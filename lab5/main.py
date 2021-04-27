@@ -36,9 +36,10 @@ pygame.display.set_caption('[5] Leyba Rusakov Urban')
 font = pygame.font.SysFont('Courier New', 15)
 
 # Object declaration
-OFFSET = 60
-object = Object(obj_to_coords('lab5/models/cat.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
+OFFSET = 5
+object = Object(obj_to_coords('lab5/models/cube.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
 projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
+wireframe = False
 
 # Rotation angle (rad)
 alpha = 0
@@ -79,12 +80,10 @@ while True:
                 mode = 'y'
             if event.key == pygame.K_z:
                 mode = 'z'
+            if event.key == pygame.K_w:
+                wireframe = not wireframe
             if event.key == pygame.K_r:
                 angles[mode] = 0
-            if event.key == pygame.K_e:
-                print(object.normals, end='\n\n')
-            if event.key == pygame.K_u:
-                print(projected_object.prepare(screen, copy=True).translate([0, HALF_HEIGHT / 2, 0]).polygons.shape, end='\n\n')
         # On mouse scroll, change angle
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Mouse Wheel Up
@@ -114,14 +113,13 @@ while True:
                 sign = -1
 
     if rotating:
-        # object = object.rotateX(sign * angles['x'], 'center').rotateY(sign * angles['y'], 'center').rotateZ(sign * angles['z'], 'center')
         object = object.rotateX(sign * angles['x']).rotateY(sign * angles['y']).rotateZ(sign * angles['z'])
         projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
 
     # Clear screen
     fill_background()
     # Draw geometry
-    projected_object.prepare(screen, copy=True).translate([0, HALF_HEIGHT / 2, 0]).draw(screen)
+    projected_object.prepare(screen, copy=True).draw(screen, wireframe=wireframe)
     draw_text()
 
     # Update screen
