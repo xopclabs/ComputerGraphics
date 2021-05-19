@@ -4,6 +4,7 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from figures import *
 
+
 # Global settings
 # Screen stuff
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -34,12 +35,11 @@ pygame.display.set_caption('[1.3] Leyba Rusakov Urban')
 # Font for text rendering
 font = pygame.font.SysFont('Courier New', 15)
 
-
 # Object declaration
 OFFSET = 60
 # object = Box([0, 0, 0], (1, 1, 1))
 # projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
-object = Object(obj_to_coords('lab1\\models\\cat.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
+object = Object(obj_to_coords('models/cat.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
 projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
 # Rotation angle (rad)
 alpha = -np.pi / 60
@@ -122,7 +122,6 @@ while True:
     # Clear screen
     fill_background()
     # Draw geometry
-    # projected_object.prepare(screen, copy=True).draw(screen)
     projected_object.prepare(screen, copy=True).translate([0, HALF_HEIGHT / 2, 0]).draw(screen)
     draw_text()
 

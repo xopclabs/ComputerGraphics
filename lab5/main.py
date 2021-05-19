@@ -37,7 +37,7 @@ font = pygame.font.SysFont('Courier New', 15)
 
 # Object declaration
 OFFSET = 5
-object = Object(obj_to_coords('lab5/models/cube.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
+object = Object(obj_to_coords('models/cube.obj')).rotateX(3*np.pi/2).rotateY(13*np.pi/12)
 projected_object = object.translate([0, 0, OFFSET], copy=True).project(AR, FOV, FAR, NEAR)
 wireframe = False
 

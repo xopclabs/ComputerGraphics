@@ -158,6 +158,7 @@ while True:
             if event.key == pygame.K_r:
                 line = generate_line()
                 clipped = None
+                rect_left_x, rect_top_y, rect_right_x, rect_bot_y = 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
         if event.type == pygame.MOUSEBUTTONDOWN:
             rect_left_x, rect_top_y = pygame.mouse.get_pos()
             moving = True
