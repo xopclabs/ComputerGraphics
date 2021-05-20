@@ -3,8 +3,17 @@ from collections.abc import Sequence
 
 
 def normalize(X):
-    X = X[:, :3] / np.linalg.norm(X[:, :3], axis=-1)[:, None]
-    return np.pad(X, [(0, 0), (0, 1)], mode='constant', constant_values=1)
+    if X.ndim == 1:
+        norm = X[:3] / np.linalg.norm(X[:3])
+        norm = np.concatenate([norm, [1]])
+    else:
+        norm = X[:, :3] / np.linalg.norm(X[:, :3], axis=-1)[:, None]
+        norm = np.pad(norm, [(0, 0), (0, 1)], mode='constant', constant_values=1)
+    return norm
+
+
+def dot(X, y):
+    return np.sum(X[:, :3] * y[:3], axis=1)
 
 
 def get_normal(polygons):

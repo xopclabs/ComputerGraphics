@@ -9,7 +9,8 @@ from math3D import *
 class Object():
     def __init__(self, polygons, normals=None):
         self.polygons = polygons.astype(np.float32)
-        self.colors = np.linspace(50, 255, self.polygons.shape[0], dtype=np.uint8)
+        #self.colors = np.linspace(50, 200, self.polygons.shape[0], dtype=np.uint8)
+        self.colors = np.ones((self.polygons.shape[0]), dtype=np.uint8) * 255
         self.center = self.polygons.mean(axis=0).mean(axis=0).reshape(1, 4)
         self.normals = normals
         if self.normals is None:
@@ -32,8 +33,10 @@ class Object():
         obj = deepcopy(self) if copy else self
         if around == 'center':
             obj.polygons = rotateX(obj.polygons, angle, around=self.center[:3])
+            obj.normals = rotateX(obj.normals, angle, around=self.center[:3])
         else:
             obj.polygons = rotateX(obj.polygons, angle)
+            obj.normals = rotateX(obj.normals, angle)
             obj.center = rotateX(obj.center, angle)
         return obj
 
@@ -42,8 +45,10 @@ class Object():
         obj = deepcopy(self) if copy else self
         if around == 'center':
             obj.polygons = rotateY(obj.polygons, angle, around=self.center[:3])
+            obj.normals = rotateY(obj.normals, angle, around=self.center[:3])
         else:
             obj.polygons = rotateY(obj.polygons, angle)
+            obj.normals = rotateY(obj.normals, angle)
             obj.center = rotateY(obj.center, angle)
         return obj
 
@@ -52,8 +57,10 @@ class Object():
         obj = deepcopy(self) if copy else self
         if around == 'center':
             obj.polygons = rotateZ(obj.polygons, angle, around=self.center[:3])
+            obj.normals = rotateZ(obj.normals, angle, around=self.center[:3])
         else:
             obj.polygons = rotateZ(obj.polygons, angle)
+            obj.normals = rotateZ(obj.normals, angle)
             obj.center = rotateZ(obj.center, angle)
         return obj
 
@@ -61,6 +68,7 @@ class Object():
     def scale(self, s, copy=False):
         obj = deepcopy(self) if copy else self
         obj.polygons = scale(obj.polygons, s)
+        obj.normals = scale(obj.normals, s)
         obj.center = scale(obj.center, s)
         return obj
 
@@ -83,11 +91,16 @@ class Object():
         return obj
 
 
+    def illuminate(self, direction, intensity=1.0):
+        direction = normalize(direction)
+        illumination = dot(self.normals, direction) * intensity
+        illumination[illumination < 0] = 0
+        self.colors = (self.colors * illumination).astype(np.uint8)
+        return self
+
+
     def draw(self, screen, wireframe=True):
-        self.normals = get_normal(self.polygons)
-        self._update_visibility()
         for i, (p, visible) in enumerate(zip(self.polygons, self.visibility)):
-            #if visible:
             if wireframe:
                pygame.draw.line(screen, (self.colors[i],)*3, p[0, :2], p[1, :2])
                pygame.draw.line(screen, (self.colors[i],)*3, p[1, :2], p[2, :2])
