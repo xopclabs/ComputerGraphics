@@ -1,6 +1,10 @@
-# Laboratory work № 5
-## Z-order algorithm
+# Laboratory work № 6
+## Realistic scenes
 
-Cube only rotates when mouse button is pressed. Scrolling mouse wheel changes one of 3 rotation angles. By pressing *x*, *y* or *z* one can select angle to change. Pressing *w* toggles wireframe.
+For the sake of simplicity, this demo uses single directional parallel light source with flat polygonal shading.
 
-![demo](../demo/lab5.gif)
+Pressing *x*, *y*, *z* toggles corresponding axis. Rotating mouse wheel, changes angle of rotation around toggled axis. Pressing *LMB* or *RMB* rotates sphere around toggled axis. 
+
+Pressing *left*/*right* and *up*/*down* arrow keys move light source along *x*/*y* axis. Pressing *c*/*d* moves light source along *z* axis. Pressing *q*/*w* increases/decreases intensity of the light source.
+
+![demo](../demo/lab6.gif)

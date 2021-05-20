@@ -5,6 +5,7 @@
 3. [Bilinear surfaces](https://github.com/xopclabs/computergraphics/tree/master/lab3) (bilinear surfaces, linear grid)
 4. [Line clipping](https://github.com/xopclabs/computergraphics/tree/master/lab4) (Cohen–Sutherland algorithm, rectangle line clipping)
 5. [Z-order algorithm](https://github.com/xopclabs/computergraphics/tree/master/lab5) (Z-order algoritm)
+6. [Realistic scenes](https://github.com/xopclabs/computergraphics/tree/master/lab6) (Lighting, flat shading)
 ## Installation
 ```
 $ git clone https://github.com/xopclabs/computergraphics.git
